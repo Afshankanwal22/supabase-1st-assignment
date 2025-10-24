@@ -10,6 +10,7 @@ console.log(client);
 const signupForm = document.getElementById("signupForm");
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
+    // Page reload hone se rokta hai.
     e.preventDefault();
     console.log(signupForm);
   
@@ -82,7 +83,7 @@ if(inputForm){
     const priority = document.querySelector('input[name="priority"]:checked')?.value;
 
     if(!priority) return Swal.fire("Error", "Select a priority", "error");
-
+                                                        //  Dekhta hai user login hai ya nahi.
     const { data: { session }, error: sessionError } = await client.auth.getSession();
     if(sessionError || !session) return Swal.fire("Error", "You must be logged in", "error");
 
@@ -93,7 +94,9 @@ if(inputForm){
 
     Swal.fire({ icon: "success", title: "Task Added!", timer: 1500, showConfirmButton: false })
      .then(() => window.location.href = "posts.html");
-    inputForm.reset();
+    //  form clear kardeta hai
+    inputForm.reset(); 
+    // task list ko update karta hai
     fetchTasks(); 
   });
 }
@@ -116,8 +119,10 @@ async function fetchTasks(priorityFilter=null){
   renderTasks(data);
 }
 
+// Render Tasks
 function renderTasks(tasks){
   const container = document.getElementById("tasks-container");
+  // Div jahan tasks dikhaye jayeng
   container.innerHTML = '';
 
   if(!tasks || tasks.length===0){
@@ -137,10 +142,16 @@ function renderTasks(tasks){
 }
 
 // Filter buttons
+
+// Ye buttons allow karta hai user ko priority ke hisaab se tasks filter karne ka.
+// High, Medium, Low, All Ye fetchTasks function call karenge filter ke saath.
 document.getElementById("filter-all").addEventListener("click", ()=>fetchTasks(null));
 document.getElementById("filter-high").addEventListener("click", ()=>fetchTasks("High"));
 document.getElementById("filter-medium").addEventListener("click", ()=>fetchTasks("Medium"));
 document.getElementById("filter-low").addEventListener("click", ()=>fetchTasks("Low"));
 
 // On load
+// Jab page load ho automatically tasks fetch ho jayenge.
+// User ko bina click kiye apne tasks dikh jayenge.
+
 document.addEventListener("DOMContentLoaded", ()=>fetchTasks());

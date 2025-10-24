@@ -8,6 +8,7 @@ console.log(client);
 
 // ========== Sign Up ==========
 const signupForm = document.getElementById("signupForm");
+// Check karta hai ki ye form exist karta hai ya nahi.
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     // Page reload hone se rokta hai.
@@ -87,6 +88,7 @@ if(inputForm){
     const { data: { session }, error: sessionError } = await client.auth.getSession();
     if(sessionError || !session) return Swal.fire("Error", "You must be logged in", "error");
 
+    // Current user identify hai
     const userId = session.user.id;
 
     const { error } = await client.from("task").insert([{ user_id: userId, title, priority, description }]);
@@ -103,6 +105,8 @@ if(inputForm){
 
 // ================= Fetch Tasks =================
 async function fetchTasks(priorityFilter=null){
+                          //  Current user session check karta hai
+
   const { data: { session } } = await client.auth.getSession();
   if(!session) return Swal.fire("Error", "Login first", "error");
 
@@ -111,6 +115,7 @@ async function fetchTasks(priorityFilter=null){
                     .eq("user_id", session.user.id)
                     .order("created_at", { ascending: false });
 
+    // Ye check karta hai: agar priorityFilter ke andar koi value hai (High, Medium, ya Low), tab ye next line chalayega.
   if(priorityFilter) query = query.eq("priority", priorityFilter);
 
   const { data, error } = await query;
